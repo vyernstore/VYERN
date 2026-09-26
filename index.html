@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VYERN</title>
+
+<!-- =====================================================
+     FAVICON
+     DEJA VACÍO HASTA QUE QUIERAS PONER TU ICONO
+     Ejemplo:
+     <link rel="icon" type="image/png" href="icono.png">
+===================================================== -->
+
+<!-- <link rel="icon" type="image/png" href="https://i.ibb.co/n8wsW5Pk/Screenshot9885-sin-fondo.png"> -->
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root{
+    --bg:#050505;
+    --bg2:#080808;
+    --panel:#0d0d0f;
+    --panel2:#111114;
+    --text:#f5f5f5;
+    --muted:#85858c;
+    --line:rgba(255,255,255,.08);
+    --line2:rgba(255,255,255,.14);
+    --accent:#ffffff;
+    --accent-soft:rgba(255,255,255,.12);
+    --radius:24px;
+    --shadow:0 30px 100px rgba(0,0,0,.55);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 50% -10%,rgba(255,255,255,.09),transparent 32%),
+        radial-gradient(circle at 0% 45%,rgba(255,255,255,.025),transparent 30%),
+        var(--bg);
+    color:var(--text);
+    font-family:Inter,Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+/* =====================================================
+   INTRO / LOGO DE ENTRADA
+===================================================== */
+
+.intro{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#050505;
+    transition:
+        opacity .9s cubic-bezier(.2,.8,.2,1),
+        visibility .9s;
+}
+
+.intro.hide{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+}
+
+.intro-content{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    animation:introLogo 1.2s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.intro-logo{
+    width:min(420px,70vw);
+    max-height:180px;
+    object-fit:contain;
+    display:block;
+    filter:
+        drop-shadow(0 25px 60px rgba(0,0,0,.8))
+        drop-shadow(0 0 45px rgba(255,255,255,.08));
+}
+
+.intro-loading{
+    width:90px;
+    height:1px;
+    margin-top:45px;
+    background:rgba(255,255,255,.1);
+    overflow:hidden;
+    position:relative;
+}
+
+.intro-loading::after{
+    content:"";
+    position:absolute;
+    left:-100%;
+    top:0;
+    width:100%;
+    height:100%;
+    background:#fff;
+    animation:introLoad 1.5s ease forwards;
+}
+
+@keyframes introLogo{
+    from{
+        opacity:0;
+        transform:translateY(25px) scale(.94);
+        filter:blur(10px);
+    }
+
+    to{
+        opacity:1;
+        transform:none;
+        filter:none;
+    }
+}
+
+@keyframes introLoad{
+    from{
+        left:-100%;
+    }
+
+    to{
+        left:100%;
+    }
+}
+
+/* =====================================================
+   BACKGROUND
+===================================================== */
+
+.noise{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.035;
+    z-index:100;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+}
+
+.grid{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:-3;
+    opacity:.22;
+    background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+    background-size:70px 70px;
+    mask-image:linear-gradient(to bottom,black,transparent 75%);
+}
+
+.orb{
+    position:fixed;
+    width:500px;
+    height:500px;
+    border-radius:50%;
+    filter:blur(100px);
+    opacity:.09;
+    pointer-events:none;
+    z-index:-2;
+}
+
+.orb.one{
+    top:-250px;
+    left:15%;
+    background:white;
+}
+
+.orb.two{
+    right:-300px;
+    top:35%;
+    background:#aaa;
+}
+
+.orb.three{
+    left:-300px;
+    bottom:-300px;
+    background:#fff;
+}
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+header{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:50;
+    padding:18px 5%;
+    transition:.35s ease;
+}
+
+header.scrolled{
+    padding:12px 5%;
+}
+
+.nav{
+    max-width:1400px;
+    margin:auto;
+    height:68px;
+    padding:0 12px 0 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border:1px solid var(--line);
+    border-radius:22px;
+    background:rgba(8,8,9,.72);
+    backdrop-filter:blur(24px);
+    -webkit-backdrop-filter:blur(24px);
+    box-shadow:0 15px 50px rgba(0,0,0,.25);
+}
+
+.logo{
+    font-family:"Space Grotesk",sans-serif;
+    font-weight:900;
+    font-size:22px;
+    letter-spacing:-1.5px;
+}
+
+.logo span{
+    opacity:.4;
+}
+
+.links{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.links a{
+    color:#aaa;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+    padding:11px 14px;
+    border-radius:12px;
+    transition:.25s;
+}
+
+.links a:hover{
+    color:white;
+    background:rgba(255,255,255,.07);
+}
+
+.nav-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.icon-btn{
+    width:42px;
+    height:42px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.035);
+    color:white;
+    border-radius:13px;
+    cursor:pointer;
+    transition:.25s;
+    display:grid;
+    place-items:center;
+}
+
+.icon-btn:hover{
+    background:rgba(255,255,255,.1);
+    transform:translateY(-2px);
+}
+
+.cart-count{
+    position:absolute;
+    margin:-28px 0 0 26px;
+    min-width:17px;
+    height:17px;
+    padding:0 4px;
+    border-radius:99px;
+    display:grid;
+    place-items:center;
+    background:white;
+    color:black;
+    font-size:9px;
+    font-weight:900;
+}
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero{
+    min-height:900px;
+    height:100vh;
+    max-height:1100px;
+    padding:180px 5% 100px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+}
+
+.hero-content{
+    width:min(1200px,100%);
+    text-align:center;
+    position:relative;
+    z-index:2;
+}
+
+.eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    padding:8px 13px;
+    border:1px solid var(--line2);
+    border-radius:999px;
+    background:rgba(255,255,255,.035);
+    color:#aaa;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    animation:fadeUp .8s ease both;
+}
+
+.dot{
+    width:6px;
+    height:6px;
+    background:white;
+    border-radius:50%;
+    box-shadow:0 0 15px white;
+}
+
+.hero-logo{
+    width:100%;
+    min-height:190px;
+    margin-top:28px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+    animation:heroIn 1s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.hero-logo img{
+    width:min(520px,75vw);
+    height:auto;
+    max-height:190px;
+    object-fit:contain;
+    display:block;
+    border:0;
+    outline:0;
+    background:transparent;
+    filter:
+        drop-shadow(0 25px 50px rgba(0,0,0,.7))
+        drop-shadow(0 0 35px rgba(255,255,255,.06));
+    transition:
+        transform .5s cubic-bezier(.2,.8,.2,1),
+        filter .5s ease;
+}
+
+.hero-logo img:hover{
+    transform:scale(1.045) translateY(-4px);
+    filter:
+        drop-shadow(0 35px 65px rgba(0,0,0,.8))
+        drop-shadow(0 0 45px rgba(255,255,255,.12));
+}
+
+.logo-fallback{
+    display:none;
+    font-family:"Space Grotesk",sans-serif;
+    font-size:clamp(70px,12vw,150px);
+    font-weight:900;
+    letter-spacing:-9px;
+    line-height:.8;
+    color:white;
+    text-shadow:
+        0 25px 60px rgba(0,0,0,.8),
+        0 0 50px rgba(255,255,255,.08);
+    user-select:none;
+}
+
+.hero-logo.image-error .logo-fallback{
+    display:block;
+}
+
+.hero-logo.image-error img{
+    display:none;
+}
+
+.hero p{
+    max-width:600px;
+    margin:35px auto 0;
+    color:#888;
+    line-height:1.7;
+    font-size:15px;
+    animation:fadeUp 1s .2s ease both;
+}
+
+.hero-buttons{
+    margin-top:34px;
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    animation:fadeUp 1s .35s ease both;
+}
+
+.btn{
+    border:0;
+    border-radius:14px;
+    padding:14px 20px;
+    font-family:inherit;
+    font-size:13px;
+    font-weight:800;
+    cursor:pointer;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.btn-primary{
+    color:#050505;
+    background:#fff;
+    box-shadow:0 0 35px rgba(255,255,255,.13);
+}
+
+.btn-primary:hover{
+    transform:translateY(-4px);
+    box-shadow:0 15px 45px rgba(255,255,255,.18);
+}
+
+.btn-secondary{
+    color:white;
+    border:1px solid var(--line2);
+    background:rgba(255,255,255,.04);
+}
+
+.btn-secondary:hover{
+    background:rgba(255,255,255,.09);
+    transform:translateY(-4px);
+}
+
+.scroll-indicator{
+    position:absolute;
+    bottom:35px;
+    left:50%;
+    transform:translateX(-50%);
+    color:#666;
+    font-size:10px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+}
+
+.scroll-line{
+    width:1px;
+    height:42px;
+    background:linear-gradient(white,transparent);
+    animation:scrollPulse 1.7s infinite;
+}
+
+/* =====================================================
+   MARQUEE
+===================================================== */
+
+.marquee{
+    overflow:hidden;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    background:rgba(255,255,255,.018);
+}
+
+.marquee-track{
+    display:flex;
+    width:max-content;
+    animation:marquee 25s linear infinite;
+}
+
+.marquee-item{
+    padding:22px 32px;
+    color:#666;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:3px;
+    white-space:nowrap;
+}
+
+.marquee-item b{
+    color:#bbb;
+}
+
+/* =====================================================
+   SECTIONS
+===================================================== */
+
+.section{
+    width:min(1400px,90%);
+    margin:0 auto;
+    padding:120px 0;
+}
+
+.section-head{
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+    margin-bottom:40px;
+}
+
+.section-label{
+    color:#777;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.section-title{
+    font-family:"Space Grotesk",sans-serif;
+    font-size:clamp(35px,5vw,65px);
+    letter-spacing:-3px;
+    line-height:1;
+}
+
+.section-desc{
+    color:#707078;
+    max-width:390px;
+    font-size:13px;
+    line-height:1.7;
+}
+
+/* =====================================================
+   PRODUCTS
+===================================================== */
+
+.products{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+}
+
+.product{
+    min-height:440px;
+    position:relative;
+    overflow:hidden;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:linear-gradient(145deg,#111113,#080809);
+    cursor:pointer;
+    transition:
+        transform .45s cubic-bezier(.2,.8,.2,1),
+        border-color .3s,
+        box-shadow .45s;
+}
+
+.product:hover{
+    transform:translateY(-10px);
+    border-color:rgba(255,255,255,.2);
+    box-shadow:var(--shadow);
+}
+
+.product::before{
+    content:"";
+    position:absolute;
+    width:250px;
+    height:250px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    filter:blur(70px);
+    top:-100px;
+    left:50%;
+    transform:translateX(-50%);
+    opacity:0;
+    transition:.5s;
+    pointer-events:none;
+}
+
+.product:hover::before{
+    opacity:1;
+}
+
+.product-image{
+    height:280px;
+    position:relative;
+    overflow:hidden;
+    display:grid;
+    place-items:center;
+    background:
+        radial-gradient(
+            circle at 50% 40%,
+            rgba(255,255,255,.07),
+            transparent 55%
+        ),
+        #0a0a0b;
+    border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+.product-image::after{
+    content:"";
+    position:absolute;
+    inset:12px;
+    border:1px solid rgba(255,255,255,.045);
+    border-radius:18px;
+    pointer-events:none;
+    transition:.4s;
+}
+
+.product-image img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    padding:24px;
+    display:block;
+    position:relative;
+    z-index:1;
+    transition:
+        transform .6s cubic-bezier(.2,.8,.2,1),
+        filter .6s ease;
+    filter:drop-shadow(0 25px 35px rgba(0,0,0,.65));
+}
+
+.product:hover .product-image img{
+    transform:scale(1.08) translateY(-5px);
+    filter:drop-shadow(0 30px 45px rgba(0,0,0,.85));
+}
+
+.product:hover .product-image::after{
+    border-color:rgba(255,255,255,.12);
+}
+
+.image-placeholder{
+    position:absolute;
+    z-index:0;
+    color:#333;
+    font-size:10px;
+    letter-spacing:2px;
+    font-weight:800;
+    text-transform:uppercase;
+    pointer-events:none;
+}
+
+/* =====================================================
+   PRODUCT INFO
+===================================================== */
+
+.product-info{
+    padding:20px;
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index:3;
+    background:
+        linear-gradient(
+            to top,
+            rgba(8,8,9,.98) 0%,
+            rgba(8,8,9,.88) 65%,
+            transparent 100%
+        );
+    padding-top:45px;
+}
+
+.product-category{
+    color:#666;
+    font-size:9px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    font-weight:800;
+}
+
+.product-name{
+    margin-top:6px;
+    font-size:15px;
+    font-weight:700;
+}
+
+.product-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:15px;
+}
+
+.price{
+    color:#bbb;
+    font-size:13px;
+    font-weight:700;
+}
+
+.add{
+    width:35px;
+    height:35px;
+    border:1px solid var(--line2);
+    background:rgba(255,255,255,.05);
+    color:white;
+    border-radius:11px;
+    cursor:pointer;
+    font-size:17px;
+    transition:.25s;
+}
+
+.add:hover{
+    color:black;
+    background:white;
+    transform:rotate(90deg);
+}
+
+/* =====================================================
+   FEATURE
+===================================================== */
+
+.feature{
+    min-height:500px;
+    border:1px solid var(--line);
+    border-radius:32px;
+    overflow:hidden;
+    position:relative;
+    background:
+        radial-gradient(circle at 75% 40%,rgba(255,255,255,.1),transparent 30%),
+        linear-gradient(120deg,#0a0a0b,#111113);
+    display:flex;
+    align-items:center;
+}
+
+.feature-content{
+    width:52%;
+    padding:70px;
+    position:relative;
+    z-index:2;
+}
+
+.feature-content h2{
+    font-family:"Space Grotesk";
+    font-size:clamp(40px,5vw,75px);
+    letter-spacing:-4px;
+    line-height:.95;
+}
+
+.feature-content p{
+    margin-top:25px;
+    max-width:480px;
+    color:#777;
+    line-height:1.8;
+    font-size:14px;
+}
+
+.feature-visual{
+    position:absolute;
+    right:-80px;
+    top:50%;
+    transform:translateY(-50%);
+    width:52%;
+    height:90%;
+    display:grid;
+    place-items:center;
+}
+
+.big-orb{
+    width:330px;
+    height:330px;
+    border-radius:50%;
+    background:
+        radial-gradient(circle at 35% 30%,#fff,#aaa 18%,#333 45%,#070707 72%);
+    box-shadow:
+        -30px -20px 100px rgba(255,255,255,.15),
+        40px 40px 100px rgba(0,0,0,.9);
+    animation:float 5s ease-in-out infinite;
+}
+
+.ring{
+    position:absolute;
+    width:470px;
+    height:180px;
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:50%;
+    transform:rotate(-20deg);
+}
+
+/* =====================================================
+   CATEGORIES
+===================================================== */
+
+.categories{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+}
+
+.category{
+    height:250px;
+    border:1px solid var(--line);
+    border-radius:24px;
+    padding:28px;
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(135deg,#101012,#080808);
+    cursor:pointer;
+    transition:.4s;
+}
+
+.category:hover{
+    transform:translateY(-7px);
+    border-color:var(--line2);
+}
+
+.category h3{
+    position:relative;
+    z-index:2;
+    font-size:22px;
+}
+
+.category span{
+    position:relative;
+    z-index:2;
+    display:block;
+    margin-top:8px;
+    color:#666;
+    font-size:11px;
+}
+
+.category-shape{
+    position:absolute;
+    width:190px;
+    height:190px;
+    border-radius:40px;
+    right:-30px;
+    bottom:-50px;
+    transform:rotate(25deg);
+    background:linear-gradient(135deg,#ddd,#222);
+    box-shadow:-30px -30px 80px rgba(255,255,255,.05);
+    transition:.6s;
+}
+
+.category:hover .category-shape{
+    transform:rotate(12deg) scale(1.15);
+}
+
+/* =====================================================
+   NEWSLETTER
+===================================================== */
+
+.newsletter{
+    text-align:center;
+    border:1px solid var(--line);
+    border-radius:30px;
+    padding:80px 20px;
+    background:
+        radial-gradient(circle at 50% 0%,rgba(255,255,255,.09),transparent 45%),
+        #09090a;
+}
+
+.newsletter h2{
+    font-family:"Space Grotesk";
+    font-size:clamp(38px,5vw,65px);
+    letter-spacing:-3px;
+}
+
+.newsletter p{
+    color:#707078;
+    font-size:13px;
+    margin:18px auto 30px;
+}
+
+.email-box{
+    width:min(450px,100%);
+    margin:auto;
+    display:flex;
+    gap:8px;
+    padding:6px;
+    border:1px solid var(--line2);
+    border-radius:15px;
+    background:rgba(255,255,255,.03);
+}
+
+.email-box input{
+    flex:1;
+    min-width:0;
+    border:0;
+    outline:0;
+    background:transparent;
+    color:white;
+    padding:0 12px;
+    font-family:inherit;
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer{
+    width:min(1400px,90%);
+    margin:auto;
+    padding:40px 0 35px;
+    border-top:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    color:#555;
+    font-size:11px;
+}
+
+footer strong{
+    color:#aaa;
+}
+
+/* =====================================================
+   REVEAL
+===================================================== */
+
+.reveal{
+    opacity:0;
+    transform:translateY(35px);
+    transition:opacity .8s ease,transform .8s ease;
+}
+
+.reveal.show{
+    opacity:1;
+    transform:none;
+}
+
+/* =====================================================
+   CART
+===================================================== */
+
+.cart-panel{
+    position:fixed;
+    z-index:80;
+    top:0;
+    right:0;
+    width:min(430px,100%);
+    height:100vh;
+    background:rgba(10,10,11,.96);
+    backdrop-filter:blur(30px);
+    border-left:1px solid var(--line);
+    transform:translateX(100%);
+    transition:.45s cubic-bezier(.2,.8,.2,1);
+    padding:30px;
+}
+
+.cart-panel.open{
+    transform:translateX(0);
+}
+
+.cart-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding-bottom:25px;
+    border-bottom:1px solid var(--line);
+}
+
+.cart-head h2{
+    font-family:"Space Grotesk";
+}
+
+.cart-items{
+    padding:25px 0;
+    color:#777;
+    font-size:13px;
+}
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.6);
+    z-index:70;
+    opacity:0;
+    pointer-events:none;
+    transition:.3s;
+}
+
+.overlay.show{
+    opacity:1;
+    pointer-events:auto;
+}
+
+/* =====================================================
+   ANIMATIONS
+===================================================== */
+
+@keyframes heroIn{
+    from{
+        opacity:0;
+        transform:translateY(50px) scale(.96);
+        filter:blur(12px);
+    }
+
+    to{
+        opacity:1;
+        transform:none;
+        filter:none;
+    }
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(25px);
+    }
+
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+@keyframes float{
+    0%,100%{
+        transform:translateY(-8px) rotate(0deg);
+    }
+
+    50%{
+        transform:translateY(12px) rotate(4deg);
+    }
+}
+
+@keyframes scrollPulse{
+    0%,100%{
+        opacity:.3;
+        transform:scaleY(.6);
+    }
+
+    50%{
+        opacity:1;
+        transform:scaleY(1);
+    }
+}
+
+@keyframes marquee{
+    to{
+        transform:translateX(-50%);
+    }
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1000px){
+
+    .products{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .feature-content{
+        width:65%;
+        padding:45px;
+    }
+
+    .feature-visual{
+        opacity:.45;
+        width:70%;
+    }
+}
+
+@media(max-width:700px){
+
+    header{
+        padding:10px 3%;
+    }
+
+    .nav{
+        height:60px;
+        padding-left:17px;
+    }
+
+    .links{
+        display:none;
+    }
+
+    .hero{
+        min-height:780px;
+    }
+
+    .hero-logo{
+        min-height:150px;
+    }
+
+    .hero-logo img{
+        width:min(420px,82vw);
+        max-height:150px;
+    }
+
+    .logo-fallback{
+        font-size:70px;
+        letter-spacing:-6px;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+        width:220px;
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .section{
+        padding:80px 0;
+    }
+
+    .section-head{
+        display:block;
+    }
+
+    .section-desc{
+        margin-top:20px;
+    }
+
+    .products{
+        grid-template-columns:1fr;
+    }
+
+    .product{
+        min-height:430px;
+    }
+
+    .product-image{
+        height:280px;
+    }
+
+    .categories{
+        grid-template-columns:1fr;
+    }
+
+    .feature{
+        min-height:600px;
+    }
+
+    .feature-content{
+        width:100%;
+        padding:35px;
+    }
+
+    .feature-visual{
+        width:100%;
+        opacity:.25;
+    }
+
+    .big-orb{
+        width:270px;
+        height:270px;
+    }
+
+    footer{
+        flex-direction:column;
+        gap:12px;
+    }
+
+    .intro-logo{
+        width:min(340px,75vw);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     PANTALLA DE ENTRADA
+===================================================== -->
+
+<div class="intro" id="intro">
+
+    <div class="intro-content">
+
+        <img
+            class="intro-logo"
+            src="https://i.ibb.co/n8wsW5Pk/Screenshot9885-sin-fondo.png"
+            alt="VYERN"
+        >
+
+        <div class="intro-loading"></div>
+
+    </div>
+
+</div>
+
+<div class="noise"></div>
+<div class="grid"></div>
+
+<div class="orb one"></div>
+<div class="orb two"></div>
+<div class="orb three"></div>
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<header id="header">
+
+    <nav class="nav">
+
+        <div class="logo">
+            VYERN<span>®</span>
+        </div>
+
+        <div class="links">
+            <a href="#shop">Shop</a>
+            <a href="#featured">Featured</a>
+            <a href="#categories">Categories</a>
+            <a href="#about">About</a>
+        </div>
+
+        <div class="nav-actions">
+
+            <button
+                class="icon-btn"
+                aria-label="Buscar"
+                onclick="searchStore()"
+            >
+                ⌕
+            </button>
+
+            <button
+                class="icon-btn"
+                aria-label="Carrito"
+                onclick="openCart()"
+            >
+                ♧
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+
+        </div>
+
+    </nav>
+
+</header>
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="eyebrow">
+            <span class="dot"></span>
+            VYERN / NEW COLLECTION
+        </div>
+
+        <div class="hero-logo" id="heroLogo">
+
+            <img
+                src="https://i.ibb.co/n8wsW5Pk/Screenshot9885-sin-fondo.png"
+                alt="VYERN"
+                id="vyernImage"
+            >
+
+            <div class="logo-fallback">
+                VYERN
+            </div>
+
+        </div>
+
+        <p>
+            Designed for those who don't follow the visual noise.
+            Discover a new generation of objects, apparel and digital
+            aesthetics built around a darker perspective.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a
+                class="btn btn-primary"
+                href="#shop"
+            >
+                EXPLORE COLLECTION
+            </a>
+
+            <a
+                class="btn btn-secondary"
+                href="#featured"
+            >
+                DISCOVER VYERN
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="scroll-indicator">
+        SCROLL
+        <span class="scroll-line"></span>
+    </div>
+
+</section>
+
+<!-- =====================================================
+     MARQUEE
+===================================================== -->
+
+<div class="marquee">
+
+    <div class="marquee-track">
+
+        <div class="marquee-item">
+            <b>VYERN</b> — DARK OBJECTS
+        </div>
+
+        <div class="marquee-item">
+            PREMIUM DESIGN
+        </div>
+
+        <div class="marquee-item">
+            <b>VYERN</b> — EST. 2026
+        </div>
+
+        <div class="marquee-item">
+            BUILT DIFFERENT
+        </div>
+
+        <div class="marquee-item">
+            <b>VYERN</b> — DARK OBJECTS
+        </div>
+
+        <div class="marquee-item">
+            PREMIUM DESIGN
+        </div>
+
+        <div class="marquee-item">
+            <b>VYERN</b> — EST. 2026
+        </div>
+
+        <div class="marquee-item">
+            BUILT DIFFERENT
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     SHOP
+===================================================== -->
+
+<section class="section reveal" id="shop">
+
+    <div class="section-head">
+
+        <div>
+
+            <div class="section-label">
+                01 / COLLECTION
+            </div>
+
+            <h2 class="section-title">
+                Latest drops.
+            </h2>
+
+        </div>
+
+        <p class="section-desc">
+            A selection of objects created around minimalism,
+            contrast and a darker visual identity.
+        </p>
+
+    </div>
+
+    <div class="products">
+
+        <article class="product">
+
+            <div class="product-image">
+
+                <img
+                    src="https://i.ibb.co/393y8Dw0/20260926-102105181.png"
+                    alt="VOID STYLE"
+                    onerror="this.style.display='none';"
+                >
+
+                <div class="image-placeholder">
+                    IMAGE 01
+                </div>
+
+            </div>
+
+            <div class="product-info">
+
+                <div class="product-category">
+                    VYERN / 001
+                </div>
+
+                <div class="product-name">
+                    VOID STYLE
+                </div>
+
+                <div class="product-bottom">
+
+                    <span class="price">
+                        $34.990
+                    </span>
+
+                    <button
+                        class="add"
+                        onclick="addToCart('VOID STYLE')"
+                    >
+                        +
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        <article class="product">
+
+            <div class="product-image">
+
+                <img
+                    src="https://i.ibb.co/TMxCWsmR/1790428368789.png"
+                    alt="NIGHT CORE"
+                    onerror="this.style.display='none';"
+                >
+
+                <div class="image-placeholder">
+                    IMAGE 02
+                </div>
+
+            </div>
+
+            <div class="product-info">
+
+                <div class="product-category">
+                    VYERN / 002
+                </div>
+
+                <div class="product-name">
+                    NIGHT CORE
+                </div>
+
+                <div class="product-bottom">
+
+                    <span class="price">
+                        $34.990
+                    </span>
+
+                    <button
+                        class="add"
+                        onclick="addToCart('NIGHT CORE')"
+                    >
+                        +
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        <article class="product">
+
+            <div class="product-image">
+
+                <img
+                    src="https://i.ibb.co/vxBjdCHN/1790428333375.png"
+                    alt="CHROMATIC SET"
+                    onerror="this.style.display='none';"
+                >
+
+                <div class="image-placeholder">
+                    IMAGE 03
+                </div>
+
+            </div>
+
+            <div class="product-info">
+
+                <div class="product-category">
+                    VYERN / 003
+                </div>
+
+                <div class="product-name">
+                    CHROMATIC SET
+                </div>
+
+                <div class="product-bottom">
+
+                    <span class="price">
+                        $59.990
+                    </span>
+
+                    <button
+                        class="add"
+                        onclick="addToCart('CHROMATIC SERIES')"
+                    >
+                        +
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        <article class="product">
+
+            <div class="product-image">
+
+                <img
+                    src="https://i.ibb.co/xS8LSKvx/file-00000000e548820e81f08302bcc1c24c.png"
+                    alt="GYM SERIES"
+                    onerror="this.style.display='none';"
+                >
+
+                <div class="image-placeholder">
+                    IMAGE 04
+                </div>
+
+            </div>
+
+            <div class="product-info">
+
+                <div class="product-category">
+                    VYERN / 004
+                </div>
+
+                <div class="product-name">
+                    GYM SERIES
+                </div>
+
+                <div class="product-bottom">
+
+                    <span class="price">
+                        $29.990
+                    </span>
+
+                    <button
+                        class="add"
+                        onclick="addToCart('GYM SERIES')"
+                    >
+                        +
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     FEATURE
+===================================================== -->
+
+<section class="section reveal" id="featured">
+
+    <div class="feature">
+
+        <div class="feature-content">
+
+            <div class="section-label">
+                02 / FEATURED
+            </div>
+
+            <h2>
+                LESS NOISE.<br>
+                MORE FORM.
+            </h2>
+
+            <p>
+                VYERN is built around the idea that premium design
+                doesn't need to scream. Sharp silhouettes, dark
+                materials and carefully controlled details create
+                an identity that speaks for itself.
+            </p>
+
+            <br>
+
+            <a
+                href="#shop"
+                class="btn btn-primary"
+            >
+                VIEW DROP
+            </a>
+
+        </div>
+
+        <div class="feature-visual">
+
+            <div class="ring"></div>
+            <div class="big-orb"></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     CATEGORIES
+===================================================== -->
+
+<section class="section reveal" id="categories">
+
+    <div class="section-head">
+
+        <div>
+
+            <div class="section-label">
+                03 / EXPLORE
+            </div>
+
+            <h2 class="section-title">
+                Choose your layer.
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="categories">
+
+        <div class="category">
+
+            <h3>APPAREL</h3>
+
+            <span>
+                SHAPES / FABRICS / IDENTITY
+            </span>
+
+            <div class="category-shape"></div>
+
+        </div>
+
+        <div class="category">
+
+            <h3>OBJECTS</h3>
+
+            <span>
+                DESIGN / FORM / FUNCTION
+            </span>
+
+            <div class="category-shape"></div>
+
+        </div>
+
+        <div class="category">
+
+            <h3>DIGITAL</h3>
+
+            <span>
+                GFX / ASSETS / VISUALS
+            </span>
+
+            <div class="category-shape"></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     NEWSLETTER
+===================================================== -->
+
+<section class="section reveal" id="about">
+
+    <div class="newsletter">
+
+        <div class="section-label">
+            VYERN / PRIVATE ACCESS
+        </div>
+
+        <h2>
+            Join the new trend.
+        </h2>
+
+        <p>
+            Get notified about new drops and limited releases.
+        </p>
+
+        <div class="email-box">
+
+            <input
+                type="email"
+                id="email"
+                placeholder="your@email.com"
+            >
+
+            <button
+                class="btn btn-primary"
+                onclick="subscribe()"
+            >
+                JOIN
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <div>
+        © 2026 <strong>VYERN</strong>. All rights reserved.
+    </div>
+
+    <div>
+        DARK / MINIMAL / DIFFERENT
+    </div>
+
+</footer>
+
+<!-- =====================================================
+     CART
+===================================================== -->
+
+<div
+    class="overlay"
+    id="overlay"
+    onclick="closeCart()"
+></div>
+
+<aside
+    class="cart-panel"
+    id="cartPanel"
+>
+
+    <div class="cart-head">
+
+        <h2>
+            Your cart
+        </h2>
+
+        <button
+            class="icon-btn"
+            onclick="closeCart()"
+        >
+            ×
+        </button>
+
+    </div>
+
+    <div
+        class="cart-items"
+        id="cartItems"
+    >
+        Your cart is empty.
+    </div>
+
+</aside>
+
+<script>
+
+/* =====================================================
+   INTRO
+===================================================== */
+
+window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+        document
+            .getElementById("intro")
+            .classList.add("hide");
+
+    }, 1800);
+
+});
+
+/* =====================================================
+   VYERN IMAGE
+===================================================== */
+
+const vyernImage =
+    document.getElementById("vyernImage");
+
+const heroLogo =
+    document.getElementById("heroLogo");
+
+vyernImage.addEventListener("error", () => {
+
+    console.warn(
+        "La imagen de VYERN no pudo cargarse desde ImgBB."
+    );
+
+    heroLogo.classList.add("image-error");
+
+});
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+const header =
+    document.getElementById("header");
+
+window.addEventListener("scroll", () => {
+
+    if(window.scrollY > 40){
+
+        header.classList.add("scrolled");
+
+    }else{
+
+        header.classList.remove("scrolled");
+
+    }
+
+});
+
+/* =====================================================
+   SCROLL REVEAL
+===================================================== */
+
+const revealElements =
+    document.querySelectorAll(".reveal");
+
+const observer =
+    new IntersectionObserver(
+
+        entries => {
+
+            entries.forEach(entry => {
+
+                if(entry.isIntersecting){
+
+                    entry.target.classList.add("show");
+
+                }
+
+            });
+
+        },
+
+        {
+            threshold:.12
+        }
+
+    );
+
+revealElements.forEach(el =>
+    observer.observe(el)
+);
+
+/* =====================================================
+   CART
+===================================================== */
+
+let cart = [];
+
+function addToCart(product){
+
+    cart.push(product);
+
+    document
+        .getElementById("cartCount")
+        .textContent = cart.length;
+
+    renderCart();
+
+    openCart();
+
+}
+
+function renderCart(){
+
+    const container =
+        document.getElementById("cartItems");
+
+    if(cart.length === 0){
+
+        container.textContent =
+            "Your cart is empty.";
+
+        return;
+
+    }
+
+    container.innerHTML =
+        cart.map((item,index) => `
+
+            <div style="
+                padding:15px 0;
+                border-bottom:1px solid rgba(255,255,255,.07);
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                color:#ddd;
+            ">
+
+                <span>
+                    ${item}
+                </span>
+
+                <button
+                    onclick="removeFromCart(${index})"
+                    style="
+                        border:0;
+                        background:none;
+                        color:#777;
+                        cursor:pointer;
+                        font-size:18px;
+                    "
+                >
+                    ×
+                </button>
+
+            </div>
+
+        `).join("");
+
+}
+
+function removeFromCart(index){
+
+    cart.splice(index,1);
+
+    document
+        .getElementById("cartCount")
+        .textContent = cart.length;
+
+    renderCart();
+
+}
+
+function openCart(){
+
+    document
+        .getElementById("cartPanel")
+        .classList.add("open");
+
+    document
+        .getElementById("overlay")
+        .classList.add("show");
+
+}
+
+function closeCart(){
+
+    document
+        .getElementById("cartPanel")
+        .classList.remove("open");
+
+    document
+        .getElementById("overlay")
+        .classList.remove("show");
+
+}
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function searchStore(){
+
+    const query =
+        prompt("¿Qué quieres buscar en VYERN?");
+
+    if(!query) return;
+
+    alert(
+        "Buscando: " +
+        query +
+        "\n\nEl sistema de búsqueda real puede conectarse aquí."
+    );
+
+}
+
+/* =====================================================
+   NEWSLETTER
+===================================================== */
+
+function subscribe(){
+
+    const email =
+        document
+            .getElementById("email")
+            .value
+            .trim();
+
+    if(!email){
+
+        alert("Introduce tu correo.");
+
+        return;
+
+    }
+
+    alert(
+        "¡Listo! " +
+        email +
+        " ha sido añadido a VYERN."
+    );
+
+    document
+        .getElementById("email")
+        .value = "";
+
+}
+
+/* =====================================================
+   MOUSE PARALLAX
+===================================================== */
+
+document.addEventListener(
+    "mousemove",
+    event => {
+
+        const x =
+            event.clientX /
+            window.innerWidth - .5;
+
+        const y =
+            event.clientY /
+            window.innerHeight - .5;
+
+        document
+            .querySelectorAll(".orb")
+            .forEach((orb,index) => {
+
+                const strength =
+                    (index + 1) * 8;
+
+                orb.style.transform =
+                    `translate(
+                        ${x * strength}px,
+                        ${y * strength}px
+                    )`;
+
+            });
+
+    }
+);
+
+/* =====================================================
+   ESC CLOSE
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(event.key === "Escape"){
+
+            closeCart();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
+```
