@@ -3,7 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VYERN — Store</title>
+
+<title>VYERN</title>
+
+<!-- =====================================================
+     FAVICON
+     DEJA VACÍO HASTA QUE QUIERAS PONER TU ICONO
+     Ejemplo:
+     <link rel="icon" type="image/png" href="icono.png">
+===================================================== -->
+
+<!-- <link rel="icon" type="image/png" href="https://i.ibb.co/n8wsW5Pk/Screenshot9885-sin-fondo.png"> -->
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
@@ -44,9 +54,94 @@ body{
     overflow-x:hidden;
 }
 
-/* =========================
+/* =====================================================
+   INTRO / LOGO DE ENTRADA
+===================================================== */
+
+.intro{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#050505;
+    transition:
+        opacity .9s cubic-bezier(.2,.8,.2,1),
+        visibility .9s;
+}
+
+.intro.hide{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+}
+
+.intro-content{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    animation:introLogo 1.2s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.intro-logo{
+    width:min(420px,70vw);
+    max-height:180px;
+    object-fit:contain;
+    display:block;
+    filter:
+        drop-shadow(0 25px 60px rgba(0,0,0,.8))
+        drop-shadow(0 0 45px rgba(255,255,255,.08));
+}
+
+.intro-loading{
+    width:90px;
+    height:1px;
+    margin-top:45px;
+    background:rgba(255,255,255,.1);
+    overflow:hidden;
+    position:relative;
+}
+
+.intro-loading::after{
+    content:"";
+    position:absolute;
+    left:-100%;
+    top:0;
+    width:100%;
+    height:100%;
+    background:#fff;
+    animation:introLoad 1.5s ease forwards;
+}
+
+@keyframes introLogo{
+    from{
+        opacity:0;
+        transform:translateY(25px) scale(.94);
+        filter:blur(10px);
+    }
+
+    to{
+        opacity:1;
+        transform:none;
+        filter:none;
+    }
+}
+
+@keyframes introLoad{
+    from{
+        left:-100%;
+    }
+
+    to{
+        left:100%;
+    }
+}
+
+/* =====================================================
    BACKGROUND
-========================= */
+===================================================== */
 
 .noise{
     position:fixed;
@@ -99,9 +194,9 @@ body{
     background:#fff;
 }
 
-/* =========================
+/* =====================================================
    NAVBAR
-========================= */
+===================================================== */
 
 header{
     position:fixed;
@@ -204,9 +299,9 @@ header.scrolled{
     font-weight:900;
 }
 
-/* =========================
+/* =====================================================
    HERO
-========================= */
+===================================================== */
 
 .hero{
     min-height:900px;
@@ -380,9 +475,9 @@ header.scrolled{
     animation:scrollPulse 1.7s infinite;
 }
 
-/* =========================
+/* =====================================================
    MARQUEE
-========================= */
+===================================================== */
 
 .marquee{
     overflow:hidden;
@@ -410,9 +505,9 @@ header.scrolled{
     color:#bbb;
 }
 
-/* =========================
+/* =====================================================
    SECTIONS
-========================= */
+===================================================== */
 
 .section{
     width:min(1400px,90%);
@@ -450,9 +545,9 @@ header.scrolled{
     line-height:1.7;
 }
 
-/* =========================
+/* =====================================================
    PRODUCTS
-========================= */
+===================================================== */
 
 .products{
     display:grid;
@@ -500,10 +595,6 @@ header.scrolled{
     opacity:1;
 }
 
-/* =========================
-   MARCO DE IMAGEN IMGBB
-========================= */
-
 .product-image{
     height:280px;
     position:relative;
@@ -520,7 +611,6 @@ header.scrolled{
     border-bottom:1px solid rgba(255,255,255,.05);
 }
 
-/* Marco interior */
 .product-image::after{
     content:"";
     position:absolute;
@@ -531,7 +621,6 @@ header.scrolled{
     transition:.4s;
 }
 
-/* Imagen que pegarás desde ImgBB */
 .product-image img{
     width:100%;
     height:100%;
@@ -555,7 +644,6 @@ header.scrolled{
     border-color:rgba(255,255,255,.12);
 }
 
-/* Texto cuando todavía no hayas puesto imagen */
 .image-placeholder{
     position:absolute;
     z-index:0;
@@ -567,9 +655,9 @@ header.scrolled{
     pointer-events:none;
 }
 
-/* =========================
+/* =====================================================
    PRODUCT INFO
-========================= */
+===================================================== */
 
 .product-info{
     padding:20px;
@@ -633,9 +721,9 @@ header.scrolled{
     transform:rotate(90deg);
 }
 
-/* =========================
+/* =====================================================
    FEATURE
-========================= */
+===================================================== */
 
 .feature{
     min-height:500px;
@@ -704,9 +792,9 @@ header.scrolled{
     transform:rotate(-20deg);
 }
 
-/* =========================
+/* =====================================================
    CATEGORIES
-========================= */
+===================================================== */
 
 .categories{
     display:grid;
@@ -763,9 +851,9 @@ header.scrolled{
     transform:rotate(12deg) scale(1.15);
 }
 
-/* =========================
+/* =====================================================
    NEWSLETTER
-========================= */
+===================================================== */
 
 .newsletter{
     text-align:center;
@@ -811,9 +899,9 @@ header.scrolled{
     font-family:inherit;
 }
 
-/* =========================
+/* =====================================================
    FOOTER
-========================= */
+===================================================== */
 
 footer{
     width:min(1400px,90%);
@@ -830,9 +918,9 @@ footer strong{
     color:#aaa;
 }
 
-/* =========================
+/* =====================================================
    REVEAL
-========================= */
+===================================================== */
 
 .reveal{
     opacity:0;
@@ -845,9 +933,9 @@ footer strong{
     transform:none;
 }
 
-/* =========================
+/* =====================================================
    CART
-========================= */
+===================================================== */
 
 .cart-panel{
     position:fixed;
@@ -901,9 +989,9 @@ footer strong{
     pointer-events:auto;
 }
 
-/* =========================
+/* =====================================================
    ANIMATIONS
-========================= */
+===================================================== */
 
 @keyframes heroIn{
     from{
@@ -911,6 +999,7 @@ footer strong{
         transform:translateY(50px) scale(.96);
         filter:blur(12px);
     }
+
     to{
         opacity:1;
         transform:none;
@@ -923,6 +1012,7 @@ footer strong{
         opacity:0;
         transform:translateY(25px);
     }
+
     to{
         opacity:1;
         transform:none;
@@ -933,6 +1023,7 @@ footer strong{
     0%,100%{
         transform:translateY(-8px) rotate(0deg);
     }
+
     50%{
         transform:translateY(12px) rotate(4deg);
     }
@@ -943,6 +1034,7 @@ footer strong{
         opacity:.3;
         transform:scaleY(.6);
     }
+
     50%{
         opacity:1;
         transform:scaleY(1);
@@ -955,9 +1047,9 @@ footer strong{
     }
 }
 
-/* =========================
+/* =====================================================
    RESPONSIVE
-========================= */
+===================================================== */
 
 @media(max-width:1000px){
 
@@ -1067,11 +1159,35 @@ footer strong{
         flex-direction:column;
         gap:12px;
     }
+
+    .intro-logo{
+        width:min(340px,75vw);
+    }
 }
 </style>
 </head>
 
 <body>
+
+<!-- =====================================================
+     PANTALLA DE ENTRADA
+===================================================== -->
+
+<div class="intro" id="intro">
+
+    <div class="intro-content">
+
+        <img
+            class="intro-logo"
+            src="https://i.ibb.co/n8wsW5Pk/Screenshot9885-sin-fondo.png"
+            alt="VYERN"
+        >
+
+        <div class="intro-loading"></div>
+
+    </div>
+
+</div>
 
 <div class="noise"></div>
 <div class="grid"></div>
@@ -1080,9 +1196,9 @@ footer strong{
 <div class="orb two"></div>
 <div class="orb three"></div>
 
-<!-- =========================
+<!-- =====================================================
      NAVBAR
-========================= -->
+===================================================== -->
 
 <header id="header">
 
@@ -1124,9 +1240,9 @@ footer strong{
 
 </header>
 
-<!-- =========================
+<!-- =====================================================
      HERO
-========================= -->
+===================================================== -->
 
 <section class="hero">
 
@@ -1184,9 +1300,9 @@ footer strong{
 
 </section>
 
-<!-- =========================
+<!-- =====================================================
      MARQUEE
-========================= -->
+===================================================== -->
 
 <div class="marquee">
 
@@ -1228,14 +1344,11 @@ footer strong{
 
 </div>
 
-<!-- =========================
+<!-- =====================================================
      SHOP
-========================= -->
+===================================================== -->
 
-<section
-    class="section reveal"
-    id="shop"
->
+<section class="section reveal" id="shop">
 
     <div class="section-head">
 
@@ -1260,15 +1373,10 @@ footer strong{
 
     <div class="products">
 
-        <!-- =========================
-             PRODUCTO 1
-        ========================= -->
-
         <article class="product">
 
             <div class="product-image">
 
-                <!-- PEGA AQUÍ EL LINK DIRECTO DE IMGBB -->
                 <img
                     src="https://i.ibb.co/393y8Dw0/20260926-102105181.png"
                     alt="VOID STYLE"
@@ -1310,15 +1418,10 @@ footer strong{
 
         </article>
 
-        <!-- =========================
-             PRODUCTO 2
-        ========================= -->
-
         <article class="product">
 
             <div class="product-image">
 
-                <!-- PEGA AQUÍ EL LINK DIRECTO DE IMGBB -->
                 <img
                     src="https://i.ibb.co/TMxCWsmR/1790428368789.png"
                     alt="NIGHT CORE"
@@ -1360,15 +1463,10 @@ footer strong{
 
         </article>
 
-        <!-- =========================
-             PRODUCTO 3
-        ========================= -->
-
         <article class="product">
 
             <div class="product-image">
 
-                <!-- PEGA AQUÍ EL LINK DIRECTO DE IMGBB -->
                 <img
                     src="https://i.ibb.co/vxBjdCHN/1790428333375.png"
                     alt="CHROMATIC SET"
@@ -1410,15 +1508,10 @@ footer strong{
 
         </article>
 
-        <!-- =========================
-             PRODUCTO 4
-        ========================= -->
-
         <article class="product">
 
             <div class="product-image">
 
-                <!-- PEGA AQUÍ EL LINK DIRECTO DE IMGBB -->
                 <img
                     src="https://i.ibb.co/xS8LSKvx/file-00000000e548820e81f08302bcc1c24c.png"
                     alt="GYM SERIES"
@@ -1464,14 +1557,11 @@ footer strong{
 
 </section>
 
-<!-- =========================
+<!-- =====================================================
      FEATURE
-========================= -->
+===================================================== -->
 
-<section
-    class="section reveal"
-    id="featured"
->
+<section class="section reveal" id="featured">
 
     <div class="feature">
 
@@ -1515,14 +1605,11 @@ footer strong{
 
 </section>
 
-<!-- =========================
+<!-- =====================================================
      CATEGORIES
-========================= -->
+===================================================== -->
 
-<section
-    class="section reveal"
-    id="categories"
->
+<section class="section reveal" id="categories">
 
     <div class="section-head">
 
@@ -1582,14 +1669,11 @@ footer strong{
 
 </section>
 
-<!-- =========================
+<!-- =====================================================
      NEWSLETTER
-========================= -->
+===================================================== -->
 
-<section
-    class="section reveal"
-    id="about"
->
+<section class="section reveal" id="about">
 
     <div class="newsletter">
 
@@ -1626,9 +1710,9 @@ footer strong{
 
 </section>
 
-<!-- =========================
+<!-- =====================================================
      FOOTER
-========================= -->
+===================================================== -->
 
 <footer>
 
@@ -1642,9 +1726,9 @@ footer strong{
 
 </footer>
 
-<!-- =========================
+<!-- =====================================================
      CART
-========================= -->
+===================================================== -->
 
 <div
     class="overlay"
@@ -1683,9 +1767,25 @@ footer strong{
 
 <script>
 
-/* =========================
+/* =====================================================
+   INTRO
+===================================================== */
+
+window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+        document
+            .getElementById("intro")
+            .classList.add("hide");
+
+    }, 1800);
+
+});
+
+/* =====================================================
    VYERN IMAGE
-========================= */
+===================================================== */
 
 const vyernImage =
     document.getElementById("vyernImage");
@@ -1703,9 +1803,9 @@ vyernImage.addEventListener("error", () => {
 
 });
 
-/* =========================
+/* =====================================================
    HEADER
-========================= */
+===================================================== */
 
 const header =
     document.getElementById("header");
@@ -1724,9 +1824,9 @@ window.addEventListener("scroll", () => {
 
 });
 
-/* =========================
+/* =====================================================
    SCROLL REVEAL
-========================= */
+===================================================== */
 
 const revealElements =
     document.querySelectorAll(".reveal");
@@ -1758,9 +1858,9 @@ revealElements.forEach(el =>
     observer.observe(el)
 );
 
-/* =========================
+/* =====================================================
    CART
-========================= */
+===================================================== */
 
 let cart = [];
 
@@ -1863,9 +1963,9 @@ function closeCart(){
 
 }
 
-/* =========================
+/* =====================================================
    SEARCH
-========================= */
+===================================================== */
 
 function searchStore(){
 
@@ -1882,9 +1982,9 @@ function searchStore(){
 
 }
 
-/* =========================
+/* =====================================================
    NEWSLETTER
-========================= */
+===================================================== */
 
 function subscribe(){
 
@@ -1914,9 +2014,9 @@ function subscribe(){
 
 }
 
-/* =========================
+/* =====================================================
    MOUSE PARALLAX
-========================= */
+===================================================== */
 
 document.addEventListener(
     "mousemove",
@@ -1948,9 +2048,9 @@ document.addEventListener(
     }
 );
 
-/* =========================
+/* =====================================================
    ESC CLOSE
-========================= */
+===================================================== */
 
 document.addEventListener(
     "keydown",
